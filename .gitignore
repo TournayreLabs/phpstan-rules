@@ -2,3 +2,14 @@
 /composer.lock
 /.phpunit.cache/
 /.phpunit.result.cache
+
+###> local tooling ###
+/.claude/*
+!/.claude/settings.json
+!/.claude/skills/
+!/.claude/agents/
+!/.claude/hooks/
+.claude/settings.local.json
+.aidd/cache/
+.aidd/plugin-cache/
+###< local tooling ###

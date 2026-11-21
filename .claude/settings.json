@@ -1,0 +1,35 @@
+{
+  "respectGitignore": false,
+  "permissions": {
+    "deny": [
+      "Read(./node_modules/**)",
+      "Read(./.git/**)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ./.claude/hooks/aidd-context/memory.cjs load",
+            "timeout": 5,
+            "statusMessage": "AIDD Context: refresh project memory"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ./.claude/hooks/aidd-context/memory.cjs sync",
+            "timeout": 5,
+            "statusMessage": "AIDD Context: sync project memory"
+          }
+        ]
+      }
+    ]
+  }
+}
