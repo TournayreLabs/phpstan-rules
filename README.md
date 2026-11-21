@@ -24,6 +24,7 @@ All rules are **disabled by default**. Enable the ones you need:
 parameters:
     tournayreLabsPhpstanRules:
         interfaceNameSuffix: true
+        loggerInCatch: true
 ```
 
 ## Rules
@@ -31,6 +32,7 @@ parameters:
 | Parameter             | Identifier                       | Description                              |
 |-----------------------|----------------------------------|------------------------------------------|
 | `interfaceNameSuffix` | `tournayreLabs.interfaceNameSuffix` | Interfaces must end with `Interface`     |
+| `loggerInCatch`       | `tournayreLabs.loggerInCatch`       | A `catch` without `throw` must call a `Psr\Log\LoggerInterface` |
 
 ## Adding a rule
 

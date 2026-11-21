@@ -4,19 +4,26 @@
 # parameters:
 #     tournayreLabsPhpstanRules:
 #         interfaceNameSuffix: true
+#         loggerInCatch: true
 parameters:
     tournayreLabsPhpstanRules:
         interfaceNameSuffix: false
+        loggerInCatch: false
 
 parametersSchema:
     tournayreLabsPhpstanRules: structure([
         interfaceNameSuffix: bool()
+        loggerInCatch: bool()
     ])
 
 services:
     -
         class: TournayreLabs\PHPStanRules\Rules\InterfaceNameSuffixRule
+    -
+        class: TournayreLabs\PHPStanRules\Rules\LoggerInCatchRule
 
 conditionalTags:
     TournayreLabs\PHPStanRules\Rules\InterfaceNameSuffixRule:
         phpstan.rules.rule: %tournayreLabsPhpstanRules.interfaceNameSuffix%
+    TournayreLabs\PHPStanRules\Rules\LoggerInCatchRule:
+        phpstan.rules.rule: %tournayreLabsPhpstanRules.loggerInCatch%
