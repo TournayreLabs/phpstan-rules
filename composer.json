@@ -1,0 +1,42 @@
+{
+    "name": "tournayrelabs/phpstan-rules",
+    "description": "PHPStan rules you can enable one by one through configuration",
+    "type": "phpstan-extension",
+    "license": "MIT",
+    "keywords": [
+        "phpstan",
+        "static analysis",
+        "rules"
+    ],
+    "require": {
+        "php": ">=8.2",
+        "phpstan/phpstan": "^2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "TournayreLabs\\PHPStanRules\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TournayreLabs\\PHPStanRules\\Tests\\": "tests/"
+        },
+        "classmap": [
+            "tests/Rules/data/"
+        ]
+    },
+    "extra": {
+        "phpstan": {
+            "includes": [
+                "extension.neon"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable"
+}

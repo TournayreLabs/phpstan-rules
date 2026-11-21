@@ -1,0 +1,22 @@
+# All rules are disabled by default (opt-in).
+# Enabling them in the consuming project:
+#
+# parameters:
+#     tournayreLabsPhpstanRules:
+#         interfaceNameSuffix: true
+parameters:
+    tournayreLabsPhpstanRules:
+        interfaceNameSuffix: false
+
+parametersSchema:
+    tournayreLabsPhpstanRules: structure([
+        interfaceNameSuffix: bool()
+    ])
+
+services:
+    -
+        class: TournayreLabs\PHPStanRules\Rules\InterfaceNameSuffixRule
+
+conditionalTags:
+    TournayreLabs\PHPStanRules\Rules\InterfaceNameSuffixRule:
+        phpstan.rules.rule: %tournayreLabsPhpstanRules.interfaceNameSuffix%
