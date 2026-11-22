@@ -25,6 +25,12 @@ parameters:
     tournayreLabsPhpstanRules:
         interfaceNameSuffix: true
         loggerInCatch: true
+        doctrineQueryCall: true
+        doctrineQueryAllowedClasses: ['App\Service\Search\*']
+        doctrinePersistenceCall: true
+        doctrinePersistenceAllowedClasses: ['App\Service\UnitOfWork']
+        doctrineAllowObjectRepositories: true
+        doctrineRepositoryNoInheritance: false
 ```
 
 ## Rules
@@ -33,6 +39,20 @@ parameters:
 |-----------------------|----------------------------------|------------------------------------------|
 | `interfaceNameSuffix` | `tournayreLabs.interfaceNameSuffix` | Interfaces must end with `Interface`     |
 | `loggerInCatch`       | `tournayreLabs.loggerInCatch`       | A `catch` without `throw` must call a `Psr\Log\LoggerInterface` |
+| `doctrineQueryCall`   | `tournayreLabs.doctrineQueryCall`   | Native Doctrine query methods only in repositories / allowed services |
+| `doctrinePersistenceCall` | `tournayreLabs.doctrinePersistenceCall` | Native Doctrine persistence methods only in repositories / allowed services |
+| `doctrineRepositoryNoInheritance` | `tournayreLabs.doctrineRepositoryNoInheritance` | Repositories must not extend `EntityRepository` |
+
+### Doctrine rules
+
+Force the rest of the code through business methods (returning a null object or throwing when nothing is found).
+
+- `doctrineQueryCall` (`tournayreLabs.doctrineQueryCall`): `find*`, `count`, `createQueryBuilder`, `getRepository`, `createQuery`, query `getResult()`/`getOneOrNullResult()`... — also on application repositories called from outside.
+- `doctrinePersistenceCall` (`tournayreLabs.doctrinePersistenceCall`): `persist`, `remove`, `flush`, `refresh`, `detach`, `clear`, transactions.
+- Allowed callers: any class implementing `Doctrine\Persistence\ObjectRepository` (so `EntityRepository`/`ServiceEntityRepository` subclasses), plus the class name patterns (`*` wildcard) of `doctrineQueryAllowedClasses` / `doctrinePersistenceAllowedClasses`.
+- `doctrineAllowObjectRepositories: false` (default `true`): only the class name patterns define the allowed callers (DDD, e.g. `App\Infrastructure\Persistence\*`). Applies to both call rules.
+- `doctrineRepositoryNoInheritance` (`tournayreLabs.doctrineRepositoryNoInheritance`): a class must not extend `Doctrine\ORM\EntityRepository` (so neither `ServiceEntityRepository`); inject the `EntityManager` instead. Use it with `doctrineAllowObjectRepositories: false`, otherwise composition-based repositories are not recognised as allowed callers.
+- Limitation: a repository extending `EntityRepository` keeps its native methods public (PHP cannot narrow visibility), so without `doctrineRepositoryNoInheritance` they are only caught at call sites outside allowed callers.
 
 ## Adding a rule
 

@@ -5,15 +5,38 @@
 #     tournayreLabsPhpstanRules:
 #         interfaceNameSuffix: true
 #         loggerInCatch: true
+#         doctrineQueryCall: true
+#         doctrineQueryAllowedClasses: ['App\Service\Search\*']
+#         doctrinePersistenceCall: true
+#         doctrinePersistenceAllowedClasses: ['App\Service\UnitOfWork']
+#         doctrineAllowObjectRepositories: true
+#         doctrineRepositoryNoInheritance: false
+#
+# Doctrine call rules: by default, classes implementing Doctrine\Persistence\ObjectRepository
+# are allowed, plus the class name patterns ("*" wildcard) of the "AllowedClasses" lists.
+# With doctrineAllowObjectRepositories: false only the patterns count (DDD: e.g. 'App\Infrastructure\Persistence\*'),
+# which is what you want together with doctrineRepositoryNoInheritance.
 parameters:
     tournayreLabsPhpstanRules:
         interfaceNameSuffix: false
         loggerInCatch: false
+        doctrineQueryCall: false
+        doctrineQueryAllowedClasses: []
+        doctrinePersistenceCall: false
+        doctrinePersistenceAllowedClasses: []
+        doctrineAllowObjectRepositories: true
+        doctrineRepositoryNoInheritance: false
 
 parametersSchema:
     tournayreLabsPhpstanRules: structure([
         interfaceNameSuffix: bool()
         loggerInCatch: bool()
+        doctrineQueryCall: bool()
+        doctrineQueryAllowedClasses: listOf(string())
+        doctrinePersistenceCall: bool()
+        doctrinePersistenceAllowedClasses: listOf(string())
+        doctrineAllowObjectRepositories: bool()
+        doctrineRepositoryNoInheritance: bool()
     ])
 
 services:
@@ -21,9 +44,27 @@ services:
         class: TournayreLabs\PHPStanRules\Rules\InterfaceNameSuffixRule
     -
         class: TournayreLabs\PHPStanRules\Rules\LoggerInCatchRule
+    -
+        class: TournayreLabs\PHPStanRules\Rules\DoctrineQueryCallRule
+        arguments:
+            allowedClasses: %tournayreLabsPhpstanRules.doctrineQueryAllowedClasses%
+            allowObjectRepositories: %tournayreLabsPhpstanRules.doctrineAllowObjectRepositories%
+    -
+        class: TournayreLabs\PHPStanRules\Rules\DoctrinePersistenceCallRule
+        arguments:
+            allowedClasses: %tournayreLabsPhpstanRules.doctrinePersistenceAllowedClasses%
+            allowObjectRepositories: %tournayreLabsPhpstanRules.doctrineAllowObjectRepositories%
+    -
+        class: TournayreLabs\PHPStanRules\Rules\DoctrineRepositoryNoInheritanceRule
 
 conditionalTags:
     TournayreLabs\PHPStanRules\Rules\InterfaceNameSuffixRule:
         phpstan.rules.rule: %tournayreLabsPhpstanRules.interfaceNameSuffix%
     TournayreLabs\PHPStanRules\Rules\LoggerInCatchRule:
         phpstan.rules.rule: %tournayreLabsPhpstanRules.loggerInCatch%
+    TournayreLabs\PHPStanRules\Rules\DoctrineQueryCallRule:
+        phpstan.rules.rule: %tournayreLabsPhpstanRules.doctrineQueryCall%
+    TournayreLabs\PHPStanRules\Rules\DoctrinePersistenceCallRule:
+        phpstan.rules.rule: %tournayreLabsPhpstanRules.doctrinePersistenceCall%
+    TournayreLabs\PHPStanRules\Rules\DoctrineRepositoryNoInheritanceRule:
+        phpstan.rules.rule: %tournayreLabsPhpstanRules.doctrineRepositoryNoInheritance%

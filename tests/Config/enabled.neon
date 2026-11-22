@@ -1,3 +1,8 @@
 parameters:
     tournayreLabsPhpstanRules:
         interfaceNameSuffix: true
+        doctrineQueryCall: true
+        doctrineQueryAllowedClasses: ['App\Service\Search\*']
+        doctrinePersistenceCall: true
+        doctrineAllowObjectRepositories: false
+        doctrineRepositoryNoInheritance: true
