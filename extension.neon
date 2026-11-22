@@ -33,6 +33,18 @@
 # controllerEntityManager: forbids Doctrine\ORM\EntityManagerInterface (and subtypes) in controllers (constructor /
 # method parameters, property types). A controller matches a class name pattern, extends AbstractController
 # or carries #[AsController].
+#         forbiddenInterfaces:
+#             -
+#                 namespaces: ['App\Domain\*']
+#                 interfaces: ['Countable', 'Psr\Log\*']
+#             -
+#                 namespaces: ['App\Application\*']
+#                 preset: clock
+#                 message: 'Implement your own clock in App\Infrastructure.'
+#
+# forbiddenInterfaces: list of independent entries; a class/enum/interface whose FQCN matches one of
+# "namespaces" must not declare (implements / interface extends) one of "interfaces" and/or "preset" ("*" wildcards).
+# Presets: clock = Psr\Clock\ClockInterface + Symfony\Component\Clock\ClockInterface. "message" is shown as a tip.
 #
 # symfonyAutowireEnv: forbids #[Autowire(env: '...')] (and '%env(...)%' values); the allowed classes
 # are the configuration objects that read the environment variables.
@@ -60,6 +72,7 @@ parameters:
         noInstanceofOnForbiddenDependency: false
         noInstanceofOnForbiddenDependencyRestrictions: []
         noInstanceofOnForbiddenDependencyExcludedPaths: []
+        forbiddenInterfaces: []
 
 parametersSchema:
     tournayreLabsPhpstanRules: structure([
@@ -84,6 +97,12 @@ parametersSchema:
             reason: string()
         ]))
         noInstanceofOnForbiddenDependencyExcludedPaths: listOf(string())
+        forbiddenInterfaces: listOf(structure([
+            namespaces: listOf(string())
+            ?interfaces: listOf(string())
+            ?preset: string()
+            ?message: string()
+        ]))
     ])
 
 services:
@@ -120,6 +139,10 @@ services:
         arguments:
             restrictions: %tournayreLabsPhpstanRules.noInstanceofOnForbiddenDependencyRestrictions%
             excludedPaths: %tournayreLabsPhpstanRules.noInstanceofOnForbiddenDependencyExcludedPaths%
+    -
+        class: TournayreLabs\PHPStanRules\Rules\ForbiddenInterfaceRule
+        arguments:
+            configurations: %tournayreLabsPhpstanRules.forbiddenInterfaces%
 
 conditionalTags:
     TournayreLabs\PHPStanRules\Rules\InterfaceNameSuffixRule:
@@ -140,3 +163,6 @@ conditionalTags:
         phpstan.rules.rule: %tournayreLabsPhpstanRules.namedArguments%
     TournayreLabs\PHPStanRules\Rules\NoInstanceofOnForbiddenDependencyRule:
         phpstan.rules.rule: %tournayreLabsPhpstanRules.noInstanceofOnForbiddenDependency%
+    # forbiddenInterfaces: always tagged, it reports nothing while the list is empty.
+    TournayreLabs\PHPStanRules\Rules\ForbiddenInterfaceRule:
+        phpstan.rules.rule: true

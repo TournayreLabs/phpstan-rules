@@ -7,6 +7,7 @@ namespace TournayreLabs\PHPStanRules\Tests\Config;
 use TournayreLabs\PHPStanRules\Rules\DoctrinePersistenceCallRule;
 use TournayreLabs\PHPStanRules\Rules\DoctrineQueryCallRule;
 use TournayreLabs\PHPStanRules\Rules\DoctrineRepositoryNoInheritanceRule;
+use TournayreLabs\PHPStanRules\Rules\ForbiddenInterfaceRule;
 use TournayreLabs\PHPStanRules\Rules\InterfaceNameSuffixRule;
 use TournayreLabs\PHPStanRules\Rules\SymfonyAutowireEnvRule;
 use PHPStan\Rules\Rule;
@@ -32,6 +33,11 @@ abstract class ExtensionConfigTestCase extends PHPStanTestCase
     protected function interfaceRule(): string
     {
         return InterfaceNameSuffixRule::class;
+    }
+
+    protected function forbiddenInterfaceRule(): string
+    {
+        return ForbiddenInterfaceRule::class;
     }
 
     protected function symfonyAutowireEnvRule(): string

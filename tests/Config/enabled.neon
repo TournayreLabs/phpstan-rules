@@ -13,3 +13,11 @@ parameters:
         noInstanceofOnForbiddenDependency: true
         noInstanceofOnForbiddenDependencyRestrictions:
             - {dependency: 'Vendor\Library\', denyFrom: 'App\Domain\', reason: 'the domain must not know the library'}
+        forbiddenInterfaces:
+            -
+                namespaces: ['App\Domain\*']
+                interfaces: ['Countable']
+            -
+                namespaces: ['App\Application\*']
+                preset: clock
+                message: 'Use your own clock.'

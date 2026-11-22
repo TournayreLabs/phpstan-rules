@@ -46,4 +46,11 @@ final class DefaultConfigTest extends ExtensionConfigTestCase
     {
         self::assertNotContains(NoInstanceofOnForbiddenDependencyRule::class, $this->registeredRuleClasses());
     }
+
+    public function testForbiddenInterfaceRuleHasNoConfigurationByDefault(): void
+    {
+        $parameters = self::getContainer()->getParameter('tournayreLabsPhpstanRules');
+        self::assertIsArray($parameters);
+        self::assertSame([], $parameters['forbiddenInterfaces']);
+    }
 }

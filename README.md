@@ -41,6 +41,14 @@ parameters:
         noInstanceofOnForbiddenDependencyRestrictions:
             - {dependency: 'Vendor\Library\', denyFrom: 'App\Domain\', reason: 'the domain must not know the library'}
         noInstanceofOnForbiddenDependencyExcludedPaths: []
+        forbiddenInterfaces:
+            -
+                namespaces: ['App\Domain\*']
+                interfaces: ['Countable', 'Psr\Log\*']
+            -
+                namespaces: ['App\Application\*']
+                preset: clock
+                message: 'Implement your own clock in App\Infrastructure.'
 ```
 
 ## Rules
@@ -56,6 +64,7 @@ parameters:
 | `controllerEntityManager` | `tournayreLabs.controllerEntityManager` | Controllers must not depend on `Doctrine\ORM\EntityManagerInterface` |
 | `namedArguments` | `tournayreLabs.namedArguments` | A call with 2+ arguments including a positional one must use PHP 8 named arguments |
 | `noInstanceofOnForbiddenDependency` | `tournayreLabs.noInstanceofOnForbiddenDependency` | No `instanceof \Fully\Qualified` on a forbidden dependency namespace |
+| `forbiddenInterfaces` | `tournayreLabs.forbiddenInterface` | Forbid given interfaces in given namespaces (configurable any number of times) |
 
 ### Named arguments
 
@@ -69,6 +78,17 @@ parameters:
 - `noInstanceofOnForbiddenDependencyRestrictions`: list of `{dependency, denyFrom, reason}`. Empty by default, so enabling the rule alone reports nothing.
 - `noInstanceofOnForbiddenDependencyExcludedPaths`: a file whose path starts with one of these entries is skipped.
 - Not reported: an imported name (`use` + `instanceof Foo`), a file without namespace.
+
+### Forbidden interfaces
+
+`forbiddenInterfaces` is a list: each entry is an independent configuration, add as many as needed. Active as soon as the list is not empty.
+
+- `namespaces`: class name patterns (`*` wildcard, case-insensitive) matched against the FQCN of the analysed class, enum or interface.
+- `interfaces`: interface name patterns (`*` wildcard) forbidden there. Exact name match: forbidding `Collection` does not forbid `ArrayCollection`.
+- `preset` (optional): ready-made interface list, added to `interfaces`. Available: `clock` = `Psr\Clock\ClockInterface` + `Symfony\Component\Clock\ClockInterface`. An unknown preset fails at container build.
+- `message` (optional): shown as a tip under the error.
+- Detected: `implements` of a class / enum / anonymous class, `extends` of an interface. An interface inherited from a parent class is not reported (the parent is responsible).
+- Not detected: *using* the interface as a type (constructor parameter, property...). The rule forbids declaring it, not depending on it.
 
 ### Symfony rules
 
