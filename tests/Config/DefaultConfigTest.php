@@ -15,4 +15,11 @@ final class DefaultConfigTest extends ExtensionConfigTestCase
     {
         self::assertNotContains($this->interfaceRule(), $this->registeredRuleClasses());
     }
+
+    public function testDoctrineRulesAreDisabledByDefault(): void
+    {
+        foreach ($this->doctrineRules() as $rule) {
+            self::assertNotContains($rule, $this->registeredRuleClasses());
+        }
+    }
 }
