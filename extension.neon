@@ -15,6 +15,12 @@
 #         symfonyAutowireEnvAllowedClasses: ['App\Config\*']
 #         controllerEntityManager: true
 #         controllerEntityManagerControllerClasses: ['*\Controller\*', '*Controller']
+#         namedArguments: true
+#         namedArgumentsExcludedPaths: ['/var/www/src/Legacy']
+#
+# namedArguments: a call with at least two arguments, at least one positional, must use PHP 8 named arguments.
+# Skipped: spread, first-class callable, builtin functions, @no-named-arguments, magic methods, dynamic callees,
+# variadic parameters. A file whose path starts with an excluded path is skipped.
 #
 # controllerEntityManager: forbids Doctrine\ORM\EntityManagerInterface (and subtypes) in controllers (constructor /
 # method parameters, property types). A controller matches a class name pattern, extends AbstractController
@@ -41,6 +47,8 @@ parameters:
         symfonyAutowireEnvAllowedClasses: []
         controllerEntityManager: false
         controllerEntityManagerControllerClasses: ['*\Controller\*', '*Controller']
+        namedArguments: false
+        namedArgumentsExcludedPaths: []
 
 parametersSchema:
     tournayreLabsPhpstanRules: structure([
@@ -56,6 +64,8 @@ parametersSchema:
         symfonyAutowireEnvAllowedClasses: listOf(string())
         controllerEntityManager: bool()
         controllerEntityManagerControllerClasses: listOf(string())
+        namedArguments: bool()
+        namedArgumentsExcludedPaths: listOf(string())
     ])
 
 services:
@@ -83,6 +93,10 @@ services:
         class: TournayreLabs\PHPStanRules\Rules\ControllerEntityManagerRule
         arguments:
             controllerClasses: %tournayreLabsPhpstanRules.controllerEntityManagerControllerClasses%
+    -
+        class: TournayreLabs\PHPStanRules\Rules\NamedArgumentsRule
+        arguments:
+            excludedPaths: %tournayreLabsPhpstanRules.namedArgumentsExcludedPaths%
 
 conditionalTags:
     TournayreLabs\PHPStanRules\Rules\InterfaceNameSuffixRule:
@@ -99,3 +113,5 @@ conditionalTags:
         phpstan.rules.rule: %tournayreLabsPhpstanRules.symfonyAutowireEnv%
     TournayreLabs\PHPStanRules\Rules\ControllerEntityManagerRule:
         phpstan.rules.rule: %tournayreLabsPhpstanRules.controllerEntityManager%
+    TournayreLabs\PHPStanRules\Rules\NamedArgumentsRule:
+        phpstan.rules.rule: %tournayreLabsPhpstanRules.namedArguments%

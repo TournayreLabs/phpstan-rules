@@ -35,6 +35,8 @@ parameters:
         symfonyAutowireEnvAllowedClasses: ['App\Config\*']
         controllerEntityManager: true
         controllerEntityManagerControllerClasses: ['*\Controller\*', '*Controller']
+        namedArguments: true
+        namedArgumentsExcludedPaths: ['/var/www/src/Legacy']
 ```
 
 ## Rules
@@ -48,6 +50,13 @@ parameters:
 | `doctrineRepositoryNoInheritance` | `tournayreLabs.doctrineRepositoryNoInheritance` | Repositories must not extend `EntityRepository` |
 | `symfonyAutowireEnv` | `tournayreLabs.symfonyAutowireEnv` | No `#[Autowire(env: ...)]`: use configuration objects |
 | `controllerEntityManager` | `tournayreLabs.controllerEntityManager` | Controllers must not depend on `Doctrine\ORM\EntityManagerInterface` |
+| `namedArguments` | `tournayreLabs.namedArguments` | A call with 2+ arguments including a positional one must use PHP 8 named arguments |
+
+### Named arguments
+
+- `namedArguments` (`tournayreLabs.namedArguments`): a call (function, method, static call, `new`, nullsafe call) passing at least two arguments with at least one positional must use named arguments. The message suggests the names (`name: …`).
+- `namedArgumentsExcludedPaths`: a file whose path starts with one of these entries is skipped.
+- Skipped: spread, first-class callable syntax, dynamic callee, PHP builtin functions, `@no-named-arguments`, magic methods, a positional argument feeding a variadic parameter.
 
 ### Symfony rules
 

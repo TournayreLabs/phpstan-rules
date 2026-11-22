@@ -9,3 +9,4 @@ parameters:
         doctrineRepositoryNoInheritance: true
         symfonyAutowireEnv: true
         symfonyAutowireEnvAllowedClasses: ['App\Config\*']
+        namedArguments: true

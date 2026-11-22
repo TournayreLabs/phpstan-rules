@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TournayreLabs\PHPStanRules\Tests\Config;
 
 use TournayreLabs\PHPStanRules\Rules\ControllerEntityManagerRule;
+use TournayreLabs\PHPStanRules\Rules\NamedArgumentsRule;
 
 final class DefaultConfigTest extends ExtensionConfigTestCase
 {
@@ -33,5 +34,10 @@ final class DefaultConfigTest extends ExtensionConfigTestCase
         foreach ($this->doctrineRules() as $rule) {
             self::assertNotContains($rule, $this->registeredRuleClasses());
         }
+    }
+
+    public function testNamedArgumentsRuleIsDisabledByDefault(): void
+    {
+        self::assertNotContains(NamedArgumentsRule::class, $this->registeredRuleClasses());
     }
 }
