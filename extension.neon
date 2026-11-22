@@ -13,6 +13,18 @@
 #         doctrineRepositoryNoInheritance: false
 #         symfonyAutowireEnv: true
 #         symfonyAutowireEnvAllowedClasses: ['App\Config\*']
+#         forbiddenInterfaces:
+#             -
+#                 namespaces: ['App\Domain\*']
+#                 interfaces: ['Countable', 'Psr\Log\*']
+#             -
+#                 namespaces: ['App\Application\*']
+#                 preset: clock
+#                 message: 'Implement your own clock in App\Infrastructure.'
+#
+# forbiddenInterfaces: list of independent entries; a class/enum/interface whose FQCN matches one of
+# "namespaces" must not declare (implements / interface extends) one of "interfaces" and/or "preset" ("*" wildcards).
+# Presets: clock = Psr\Clock\ClockInterface + Symfony\Component\Clock\ClockInterface. "message" is shown as a tip.
 #
 # symfonyAutowireEnv: forbids #[Autowire(env: '...')] (and '%env(...)%' values); the allowed classes
 # are the configuration objects that read the environment variables.
@@ -33,6 +45,7 @@ parameters:
         doctrineRepositoryNoInheritance: false
         symfonyAutowireEnv: false
         symfonyAutowireEnvAllowedClasses: []
+        forbiddenInterfaces: []
 
 parametersSchema:
     tournayreLabsPhpstanRules: structure([
@@ -46,6 +59,12 @@ parametersSchema:
         doctrineRepositoryNoInheritance: bool()
         symfonyAutowireEnv: bool()
         symfonyAutowireEnvAllowedClasses: listOf(string())
+        forbiddenInterfaces: listOf(structure([
+            namespaces: listOf(string())
+            ?interfaces: listOf(string())
+            ?preset: string()
+            ?message: string()
+        ]))
     ])
 
 services:
@@ -69,6 +88,10 @@ services:
         class: TournayreLabs\PHPStanRules\Rules\SymfonyAutowireEnvRule
         arguments:
             allowedClasses: %tournayreLabsPhpstanRules.symfonyAutowireEnvAllowedClasses%
+    -
+        class: TournayreLabs\PHPStanRules\Rules\ForbiddenInterfaceRule
+        arguments:
+            configurations: %tournayreLabsPhpstanRules.forbiddenInterfaces%
 
 conditionalTags:
     TournayreLabs\PHPStanRules\Rules\InterfaceNameSuffixRule:
@@ -83,3 +106,6 @@ conditionalTags:
         phpstan.rules.rule: %tournayreLabsPhpstanRules.doctrineRepositoryNoInheritance%
     TournayreLabs\PHPStanRules\Rules\SymfonyAutowireEnvRule:
         phpstan.rules.rule: %tournayreLabsPhpstanRules.symfonyAutowireEnv%
+    # forbiddenInterfaces: always tagged, it reports nothing while the list is empty.
+    TournayreLabs\PHPStanRules\Rules\ForbiddenInterfaceRule:
+        phpstan.rules.rule: true
