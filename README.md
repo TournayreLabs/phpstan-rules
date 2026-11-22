@@ -33,6 +33,14 @@ parameters:
         doctrineRepositoryNoInheritance: false
         symfonyAutowireEnv: true
         symfonyAutowireEnvAllowedClasses: ['App\Config\*']
+        forbiddenInterfaces:
+            -
+                namespaces: ['App\Domain\*']
+                interfaces: ['Countable', 'Psr\Log\*']
+            -
+                namespaces: ['App\Application\*']
+                preset: clock
+                message: 'Implement your own clock in App\Infrastructure.'
 ```
 
 ## Rules
@@ -45,6 +53,18 @@ parameters:
 | `doctrinePersistenceCall` | `tournayreLabs.doctrinePersistenceCall` | Native Doctrine persistence methods only in repositories / allowed services |
 | `doctrineRepositoryNoInheritance` | `tournayreLabs.doctrineRepositoryNoInheritance` | Repositories must not extend `EntityRepository` |
 | `symfonyAutowireEnv` | `tournayreLabs.symfonyAutowireEnv` | No `#[Autowire(env: ...)]`: use configuration objects |
+| `forbiddenInterfaces` | `tournayreLabs.forbiddenInterface` | Forbid given interfaces in given namespaces (configurable any number of times) |
+
+### Forbidden interfaces
+
+`forbiddenInterfaces` is a list: each entry is an independent configuration, add as many as needed. Active as soon as the list is not empty.
+
+- `namespaces`: class name patterns (`*` wildcard, case-insensitive) matched against the FQCN of the analysed class, enum or interface.
+- `interfaces`: interface name patterns (`*` wildcard) forbidden there. Exact name match: forbidding `Collection` does not forbid `ArrayCollection`.
+- `preset` (optional): ready-made interface list, added to `interfaces`. Available: `clock` = `Psr\Clock\ClockInterface` + `Symfony\Component\Clock\ClockInterface`. An unknown preset fails at container build.
+- `message` (optional): shown as a tip under the error.
+- Detected: `implements` of a class / enum / anonymous class, `extends` of an interface. An interface inherited from a parent class is not reported (the parent is responsible).
+- Not detected: *using* the interface as a type (constructor parameter, property...). The rule forbids declaring it, not depending on it.
 
 ### Symfony rules
 

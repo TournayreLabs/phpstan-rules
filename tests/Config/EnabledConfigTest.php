@@ -30,4 +30,16 @@ final class EnabledConfigTest extends ExtensionConfigTestCase
             self::assertContains($rule, $this->registeredRuleClasses());
         }
     }
+
+    public function testForbiddenInterfaceRuleIsConfiguredSeveralTimes(): void
+    {
+        $parameters = self::getContainer()->getParameter('tournayreLabsPhpstanRules');
+        self::assertIsArray($parameters);
+        $configurations = $parameters['forbiddenInterfaces'];
+        self::assertIsArray($configurations);
+        self::assertCount(2, $configurations);
+        self::assertIsArray($configurations[1]);
+        self::assertSame('clock', $configurations[1]['preset']);
+        self::assertContains($this->forbiddenInterfaceRule(), $this->registeredRuleClasses());
+    }
 }
