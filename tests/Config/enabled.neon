@@ -6,3 +6,5 @@ parameters:
         doctrinePersistenceCall: true
         doctrineAllowObjectRepositories: false
         doctrineRepositoryNoInheritance: true
+        symfonyAutowireEnv: true
+        symfonyAutowireEnvAllowedClasses: ['App\Config\*']

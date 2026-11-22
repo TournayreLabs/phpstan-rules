@@ -11,6 +11,11 @@
 #         doctrinePersistenceAllowedClasses: ['App\Service\UnitOfWork']
 #         doctrineAllowObjectRepositories: true
 #         doctrineRepositoryNoInheritance: false
+#         symfonyAutowireEnv: true
+#         symfonyAutowireEnvAllowedClasses: ['App\Config\*']
+#
+# symfonyAutowireEnv: forbids #[Autowire(env: '...')] (and '%env(...)%' values); the allowed classes
+# are the configuration objects that read the environment variables.
 #
 # Doctrine call rules: by default, classes implementing Doctrine\Persistence\ObjectRepository
 # are allowed, plus the class name patterns ("*" wildcard) of the "AllowedClasses" lists.
@@ -26,6 +31,8 @@ parameters:
         doctrinePersistenceAllowedClasses: []
         doctrineAllowObjectRepositories: true
         doctrineRepositoryNoInheritance: false
+        symfonyAutowireEnv: false
+        symfonyAutowireEnvAllowedClasses: []
 
 parametersSchema:
     tournayreLabsPhpstanRules: structure([
@@ -37,6 +44,8 @@ parametersSchema:
         doctrinePersistenceAllowedClasses: listOf(string())
         doctrineAllowObjectRepositories: bool()
         doctrineRepositoryNoInheritance: bool()
+        symfonyAutowireEnv: bool()
+        symfonyAutowireEnvAllowedClasses: listOf(string())
     ])
 
 services:
@@ -56,6 +65,10 @@ services:
             allowObjectRepositories: %tournayreLabsPhpstanRules.doctrineAllowObjectRepositories%
     -
         class: TournayreLabs\PHPStanRules\Rules\DoctrineRepositoryNoInheritanceRule
+    -
+        class: TournayreLabs\PHPStanRules\Rules\SymfonyAutowireEnvRule
+        arguments:
+            allowedClasses: %tournayreLabsPhpstanRules.symfonyAutowireEnvAllowedClasses%
 
 conditionalTags:
     TournayreLabs\PHPStanRules\Rules\InterfaceNameSuffixRule:
@@ -68,3 +81,5 @@ conditionalTags:
         phpstan.rules.rule: %tournayreLabsPhpstanRules.doctrinePersistenceCall%
     TournayreLabs\PHPStanRules\Rules\DoctrineRepositoryNoInheritanceRule:
         phpstan.rules.rule: %tournayreLabsPhpstanRules.doctrineRepositoryNoInheritance%
+    TournayreLabs\PHPStanRules\Rules\SymfonyAutowireEnvRule:
+        phpstan.rules.rule: %tournayreLabsPhpstanRules.symfonyAutowireEnv%

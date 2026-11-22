@@ -31,6 +31,8 @@ parameters:
         doctrinePersistenceAllowedClasses: ['App\Service\UnitOfWork']
         doctrineAllowObjectRepositories: true
         doctrineRepositoryNoInheritance: false
+        symfonyAutowireEnv: true
+        symfonyAutowireEnvAllowedClasses: ['App\Config\*']
 ```
 
 ## Rules
@@ -42,6 +44,13 @@ parameters:
 | `doctrineQueryCall`   | `tournayreLabs.doctrineQueryCall`   | Native Doctrine query methods only in repositories / allowed services |
 | `doctrinePersistenceCall` | `tournayreLabs.doctrinePersistenceCall` | Native Doctrine persistence methods only in repositories / allowed services |
 | `doctrineRepositoryNoInheritance` | `tournayreLabs.doctrineRepositoryNoInheritance` | Repositories must not extend `EntityRepository` |
+| `symfonyAutowireEnv` | `tournayreLabs.symfonyAutowireEnv` | No `#[Autowire(env: ...)]`: use configuration objects |
+
+### Symfony rules
+
+- `symfonyAutowireEnv` (`tournayreLabs.symfonyAutowireEnv`): a method/constructor parameter must not use `#[Autowire(env: '...')]` (nor `#[Autowire('%env(...)%')]` / `value: '%env(...)%'`) — controllers, services, actions. Inject a configuration object instead.
+- `symfonyAutowireEnvAllowedClasses`: class name patterns (`*` wildcard) of the configuration objects allowed to read env variables (e.g. `App\Config\*`). Without it, no class is exempt.
+- Not covered: `#[Autowire(expression: "env('X')")]`, `#[Autowire(param: ...)]` pointing to a parameter built from an env variable.
 
 ### Doctrine rules
 
