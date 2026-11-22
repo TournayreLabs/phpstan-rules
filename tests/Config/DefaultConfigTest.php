@@ -16,6 +16,11 @@ final class DefaultConfigTest extends ExtensionConfigTestCase
         self::assertNotContains($this->interfaceRule(), $this->registeredRuleClasses());
     }
 
+    public function testSymfonyAutowireEnvRuleIsDisabledByDefault(): void
+    {
+        self::assertNotContains($this->symfonyAutowireEnvRule(), $this->registeredRuleClasses());
+    }
+
     public function testDoctrineRulesAreDisabledByDefault(): void
     {
         foreach ($this->doctrineRules() as $rule) {

@@ -19,6 +19,11 @@ final class EnabledConfigTest extends ExtensionConfigTestCase
         self::assertContains($this->interfaceRule(), $this->registeredRuleClasses());
     }
 
+    public function testSymfonyAutowireEnvRuleCanBeEnabled(): void
+    {
+        self::assertContains($this->symfonyAutowireEnvRule(), $this->registeredRuleClasses());
+    }
+
     public function testDoctrineRulesCanBeEnabled(): void
     {
         foreach ($this->doctrineRules() as $rule) {
