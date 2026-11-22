@@ -9,3 +9,11 @@ parameters:
         doctrineRepositoryNoInheritance: true
         symfonyAutowireEnv: true
         symfonyAutowireEnvAllowedClasses: ['App\Config\*']
+        forbiddenInterfaces:
+            -
+                namespaces: ['App\Domain\*']
+                interfaces: ['Countable']
+            -
+                namespaces: ['App\Application\*']
+                preset: clock
+                message: 'Use your own clock.'
