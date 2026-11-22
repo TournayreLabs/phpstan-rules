@@ -15,6 +15,20 @@
 #         symfonyAutowireEnvAllowedClasses: ['App\Config\*']
 #         controllerEntityManager: true
 #         controllerEntityManagerControllerClasses: ['*\Controller\*', '*Controller']
+#         namedArguments: true
+#         namedArgumentsExcludedPaths: ['/var/www/src/Legacy']
+#         noInstanceofOnForbiddenDependency: true
+#         noInstanceofOnForbiddenDependencyRestrictions:
+#             - {dependency: 'Vendor\Library\', denyFrom: 'App\Domain\', reason: 'the domain must not know the library'}
+#         noInstanceofOnForbiddenDependencyExcludedPaths: []
+#
+# noInstanceofOnForbiddenDependency: forbids "$x instanceof \Vendor\Foo" (fully qualified in the source) when
+# the class is in a "dependency" namespace and the current namespace is in "denyFrom" (both end with a backslash).
+# Imported names are the job of namespace-boundary tools.
+#
+# namedArguments: a call with at least two arguments, at least one positional, must use PHP 8 named arguments.
+# Skipped: spread, first-class callable, builtin functions, @no-named-arguments, magic methods, dynamic callees,
+# variadic parameters. A file whose path starts with an excluded path is skipped.
 #
 # controllerEntityManager: forbids Doctrine\ORM\EntityManagerInterface (and subtypes) in controllers (constructor /
 # method parameters, property types). A controller matches a class name pattern, extends AbstractController
@@ -53,6 +67,11 @@ parameters:
         symfonyAutowireEnvAllowedClasses: []
         controllerEntityManager: false
         controllerEntityManagerControllerClasses: ['*\Controller\*', '*Controller']
+        namedArguments: false
+        namedArgumentsExcludedPaths: []
+        noInstanceofOnForbiddenDependency: false
+        noInstanceofOnForbiddenDependencyRestrictions: []
+        noInstanceofOnForbiddenDependencyExcludedPaths: []
         forbiddenInterfaces: []
 
 parametersSchema:
@@ -69,6 +88,15 @@ parametersSchema:
         symfonyAutowireEnvAllowedClasses: listOf(string())
         controllerEntityManager: bool()
         controllerEntityManagerControllerClasses: listOf(string())
+        namedArguments: bool()
+        namedArgumentsExcludedPaths: listOf(string())
+        noInstanceofOnForbiddenDependency: bool()
+        noInstanceofOnForbiddenDependencyRestrictions: listOf(structure([
+            dependency: string()
+            denyFrom: string()
+            reason: string()
+        ]))
+        noInstanceofOnForbiddenDependencyExcludedPaths: listOf(string())
         forbiddenInterfaces: listOf(structure([
             namespaces: listOf(string())
             ?interfaces: listOf(string())
@@ -103,6 +131,15 @@ services:
         arguments:
             controllerClasses: %tournayreLabsPhpstanRules.controllerEntityManagerControllerClasses%
     -
+        class: TournayreLabs\PHPStanRules\Rules\NamedArgumentsRule
+        arguments:
+            excludedPaths: %tournayreLabsPhpstanRules.namedArgumentsExcludedPaths%
+    -
+        class: TournayreLabs\PHPStanRules\Rules\NoInstanceofOnForbiddenDependencyRule
+        arguments:
+            restrictions: %tournayreLabsPhpstanRules.noInstanceofOnForbiddenDependencyRestrictions%
+            excludedPaths: %tournayreLabsPhpstanRules.noInstanceofOnForbiddenDependencyExcludedPaths%
+    -
         class: TournayreLabs\PHPStanRules\Rules\ForbiddenInterfaceRule
         arguments:
             configurations: %tournayreLabsPhpstanRules.forbiddenInterfaces%
@@ -122,6 +159,10 @@ conditionalTags:
         phpstan.rules.rule: %tournayreLabsPhpstanRules.symfonyAutowireEnv%
     TournayreLabs\PHPStanRules\Rules\ControllerEntityManagerRule:
         phpstan.rules.rule: %tournayreLabsPhpstanRules.controllerEntityManager%
+    TournayreLabs\PHPStanRules\Rules\NamedArgumentsRule:
+        phpstan.rules.rule: %tournayreLabsPhpstanRules.namedArguments%
+    TournayreLabs\PHPStanRules\Rules\NoInstanceofOnForbiddenDependencyRule:
+        phpstan.rules.rule: %tournayreLabsPhpstanRules.noInstanceofOnForbiddenDependency%
     # forbiddenInterfaces: always tagged, it reports nothing while the list is empty.
     TournayreLabs\PHPStanRules\Rules\ForbiddenInterfaceRule:
         phpstan.rules.rule: true
