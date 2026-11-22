@@ -13,6 +13,12 @@
 #         doctrineRepositoryNoInheritance: false
 #         symfonyAutowireEnv: true
 #         symfonyAutowireEnvAllowedClasses: ['App\Config\*']
+#         controllerEntityManager: true
+#         controllerEntityManagerControllerClasses: ['*\Controller\*', '*Controller']
+#
+# controllerEntityManager: forbids Doctrine\ORM\EntityManagerInterface (and subtypes) in controllers (constructor /
+# method parameters, property types). A controller matches a class name pattern, extends AbstractController
+# or carries #[AsController].
 #         forbiddenInterfaces:
 #             -
 #                 namespaces: ['App\Domain\*']
@@ -45,6 +51,8 @@ parameters:
         doctrineRepositoryNoInheritance: false
         symfonyAutowireEnv: false
         symfonyAutowireEnvAllowedClasses: []
+        controllerEntityManager: false
+        controllerEntityManagerControllerClasses: ['*\Controller\*', '*Controller']
         forbiddenInterfaces: []
 
 parametersSchema:
@@ -59,6 +67,8 @@ parametersSchema:
         doctrineRepositoryNoInheritance: bool()
         symfonyAutowireEnv: bool()
         symfonyAutowireEnvAllowedClasses: listOf(string())
+        controllerEntityManager: bool()
+        controllerEntityManagerControllerClasses: listOf(string())
         forbiddenInterfaces: listOf(structure([
             namespaces: listOf(string())
             ?interfaces: listOf(string())
@@ -89,6 +99,10 @@ services:
         arguments:
             allowedClasses: %tournayreLabsPhpstanRules.symfonyAutowireEnvAllowedClasses%
     -
+        class: TournayreLabs\PHPStanRules\Rules\ControllerEntityManagerRule
+        arguments:
+            controllerClasses: %tournayreLabsPhpstanRules.controllerEntityManagerControllerClasses%
+    -
         class: TournayreLabs\PHPStanRules\Rules\ForbiddenInterfaceRule
         arguments:
             configurations: %tournayreLabsPhpstanRules.forbiddenInterfaces%
@@ -106,6 +120,8 @@ conditionalTags:
         phpstan.rules.rule: %tournayreLabsPhpstanRules.doctrineRepositoryNoInheritance%
     TournayreLabs\PHPStanRules\Rules\SymfonyAutowireEnvRule:
         phpstan.rules.rule: %tournayreLabsPhpstanRules.symfonyAutowireEnv%
+    TournayreLabs\PHPStanRules\Rules\ControllerEntityManagerRule:
+        phpstan.rules.rule: %tournayreLabsPhpstanRules.controllerEntityManager%
     # forbiddenInterfaces: always tagged, it reports nothing while the list is empty.
     TournayreLabs\PHPStanRules\Rules\ForbiddenInterfaceRule:
         phpstan.rules.rule: true
