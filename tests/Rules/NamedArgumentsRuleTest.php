@@ -55,9 +55,9 @@ final class NamedArgumentsRuleTest extends RuleTestCase
             [__DIR__ . '/data/named-arguments-excluded/excluded.php'],
             [
                 [
-                    'Appel à TournayreLabs\PHPStanRules\Tests\Rules\data\NamedArgumentsExcluded\pair()'
-                    . ' avec 2 arguments dont au moins un positionnel'
-                    . ' : utiliser les arguments nommés PHP 8 (first: …, second: …).',
+                    'Call to TournayreLabs\PHPStanRules\Tests\Rules\data\NamedArgumentsExcluded\pair()'
+                    . ' with 2 arguments, at least one of them positional:'
+                    . ' use PHP 8 named arguments (first: …, second: …).',
                     12,
                 ],
             ]
@@ -67,8 +67,8 @@ final class NamedArgumentsRuleTest extends RuleTestCase
     private function message(string $callee, int $count, string $suggestion): string
     {
         return sprintf(
-            'Appel à %s%s() avec %d arguments dont au moins un positionnel'
-            . ' : utiliser les arguments nommés PHP 8 (%s).',
+            'Call to %s%s() with %d arguments, at least one of them positional:'
+            . ' use PHP 8 named arguments (%s).',
             self::DATA,
             $callee,
             $count,

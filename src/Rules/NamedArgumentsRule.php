@@ -70,8 +70,8 @@ final class NamedArgumentsRule implements Rule
         return [
             RuleErrorBuilder::message(
                 sprintf(
-                    'Appel à %s avec %d arguments dont au moins un positionnel'
-                    . ' : utiliser les arguments nommés PHP 8 (%s).',
+                    'Call to %s with %d arguments, at least one of them positional:'
+                    . ' use PHP 8 named arguments (%s).',
                     $callee['label'],
                     count($args),
                     $suggestion
