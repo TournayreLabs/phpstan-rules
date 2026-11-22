@@ -6,6 +6,7 @@ namespace TournayreLabs\PHPStanRules\Tests\Config;
 
 use TournayreLabs\PHPStanRules\Rules\ControllerEntityManagerRule;
 use TournayreLabs\PHPStanRules\Rules\NamedArgumentsRule;
+use TournayreLabs\PHPStanRules\Rules\NoInstanceofOnForbiddenDependencyRule;
 
 final class EnabledConfigTest extends ExtensionConfigTestCase
 {
@@ -42,5 +43,10 @@ final class EnabledConfigTest extends ExtensionConfigTestCase
     public function testNamedArgumentsRuleCanBeEnabled(): void
     {
         self::assertContains(NamedArgumentsRule::class, $this->registeredRuleClasses());
+    }
+
+    public function testNoInstanceofOnForbiddenDependencyRuleCanBeEnabled(): void
+    {
+        self::assertContains(NoInstanceofOnForbiddenDependencyRule::class, $this->registeredRuleClasses());
     }
 }

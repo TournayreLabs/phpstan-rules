@@ -10,3 +10,6 @@ parameters:
         symfonyAutowireEnv: true
         symfonyAutowireEnvAllowedClasses: ['App\Config\*']
         namedArguments: true
+        noInstanceofOnForbiddenDependency: true
+        noInstanceofOnForbiddenDependencyRestrictions:
+            - {dependency: 'Vendor\Library\', denyFrom: 'App\Domain\', reason: 'the domain must not know the library'}

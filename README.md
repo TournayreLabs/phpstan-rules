@@ -37,6 +37,10 @@ parameters:
         controllerEntityManagerControllerClasses: ['*\Controller\*', '*Controller']
         namedArguments: true
         namedArgumentsExcludedPaths: ['/var/www/src/Legacy']
+        noInstanceofOnForbiddenDependency: true
+        noInstanceofOnForbiddenDependencyRestrictions:
+            - {dependency: 'Vendor\Library\', denyFrom: 'App\Domain\', reason: 'the domain must not know the library'}
+        noInstanceofOnForbiddenDependencyExcludedPaths: []
 ```
 
 ## Rules
@@ -51,12 +55,20 @@ parameters:
 | `symfonyAutowireEnv` | `tournayreLabs.symfonyAutowireEnv` | No `#[Autowire(env: ...)]`: use configuration objects |
 | `controllerEntityManager` | `tournayreLabs.controllerEntityManager` | Controllers must not depend on `Doctrine\ORM\EntityManagerInterface` |
 | `namedArguments` | `tournayreLabs.namedArguments` | A call with 2+ arguments including a positional one must use PHP 8 named arguments |
+| `noInstanceofOnForbiddenDependency` | `tournayreLabs.noInstanceofOnForbiddenDependency` | No `instanceof \Fully\Qualified` on a forbidden dependency namespace |
 
 ### Named arguments
 
 - `namedArguments` (`tournayreLabs.namedArguments`): a call (function, method, static call, `new`, nullsafe call) passing at least two arguments with at least one positional must use named arguments. The message suggests the names (`name: …`).
 - `namedArgumentsExcludedPaths`: a file whose path starts with one of these entries is skipped.
 - Skipped: spread, first-class callable syntax, dynamic callee, PHP builtin functions, `@no-named-arguments`, magic methods, a positional argument feeding a variadic parameter.
+
+### Namespace boundaries
+
+- `noInstanceofOnForbiddenDependency` (`tournayreLabs.noInstanceofOnForbiddenDependency`): complements namespace-boundary tools that see imports (`use`) but not an `instanceof` written with an inline fully qualified name. Reported when the class is written fully qualified, its namespace starts with a restriction's `dependency` and the current namespace starts with its `denyFrom` (both end with `\`). One error per matching restriction.
+- `noInstanceofOnForbiddenDependencyRestrictions`: list of `{dependency, denyFrom, reason}`. Empty by default, so enabling the rule alone reports nothing.
+- `noInstanceofOnForbiddenDependencyExcludedPaths`: a file whose path starts with one of these entries is skipped.
+- Not reported: an imported name (`use` + `instanceof Foo`), a file without namespace.
 
 ### Symfony rules
 
