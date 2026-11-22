@@ -24,7 +24,7 @@ final class DoctrineRepositoryNoInheritanceRuleTest extends RuleTestCase
             [$this->message('LegacyUserRepository'), 8],
             [$this->message('ServiceBackedRepository'), 12],
             // The stub of ServiceEntityRepository itself extends EntityRepository.
-            [$this->message('ServiceEntityRepository', 'Doctrine\\Bundle\\DoctrineBundle\\Repository'), 138],
+            [$this->message('ServiceEntityRepository', 'Doctrine\\Bundle\\DoctrineBundle\\Repository'), 142],
         ]);
     }
 

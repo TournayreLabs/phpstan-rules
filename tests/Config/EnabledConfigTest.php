@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace TournayreLabs\PHPStanRules\Tests\Config;
 
+use TournayreLabs\PHPStanRules\Rules\ControllerEntityManagerRule;
+
 final class EnabledConfigTest extends ExtensionConfigTestCase
 {
     public static function getAdditionalConfigFiles(): array
@@ -17,6 +19,11 @@ final class EnabledConfigTest extends ExtensionConfigTestCase
     public function testRuleCanBeEnabled(): void
     {
         self::assertContains($this->interfaceRule(), $this->registeredRuleClasses());
+    }
+
+    public function testControllerEntityManagerRuleCanBeEnabled(): void
+    {
+        self::assertContains(ControllerEntityManagerRule::class, $this->registeredRuleClasses());
     }
 
     public function testSymfonyAutowireEnvRuleCanBeEnabled(): void

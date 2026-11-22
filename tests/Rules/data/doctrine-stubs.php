@@ -99,6 +99,10 @@ namespace Doctrine\ORM {
         public function rollback(): void;
     }
 
+    abstract class EntityManager implements EntityManagerInterface
+    {
+    }
+
     class QueryBuilder
     {
         public function getQuery(): AbstractQuery

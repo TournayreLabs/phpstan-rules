@@ -1,6 +1,7 @@
 parameters:
     tournayreLabsPhpstanRules:
         interfaceNameSuffix: true
+        controllerEntityManager: true
         doctrineQueryCall: true
         doctrineQueryAllowedClasses: ['App\Service\Search\*']
         doctrinePersistenceCall: true

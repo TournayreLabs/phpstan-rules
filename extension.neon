@@ -13,6 +13,12 @@
 #         doctrineRepositoryNoInheritance: false
 #         symfonyAutowireEnv: true
 #         symfonyAutowireEnvAllowedClasses: ['App\Config\*']
+#         controllerEntityManager: true
+#         controllerEntityManagerControllerClasses: ['*\Controller\*', '*Controller']
+#
+# controllerEntityManager: forbids Doctrine\ORM\EntityManagerInterface (and subtypes) in controllers (constructor /
+# method parameters, property types). A controller matches a class name pattern, extends AbstractController
+# or carries #[AsController].
 #
 # symfonyAutowireEnv: forbids #[Autowire(env: '...')] (and '%env(...)%' values); the allowed classes
 # are the configuration objects that read the environment variables.
@@ -33,6 +39,8 @@ parameters:
         doctrineRepositoryNoInheritance: false
         symfonyAutowireEnv: false
         symfonyAutowireEnvAllowedClasses: []
+        controllerEntityManager: false
+        controllerEntityManagerControllerClasses: ['*\Controller\*', '*Controller']
 
 parametersSchema:
     tournayreLabsPhpstanRules: structure([
@@ -46,6 +54,8 @@ parametersSchema:
         doctrineRepositoryNoInheritance: bool()
         symfonyAutowireEnv: bool()
         symfonyAutowireEnvAllowedClasses: listOf(string())
+        controllerEntityManager: bool()
+        controllerEntityManagerControllerClasses: listOf(string())
     ])
 
 services:
@@ -69,6 +79,10 @@ services:
         class: TournayreLabs\PHPStanRules\Rules\SymfonyAutowireEnvRule
         arguments:
             allowedClasses: %tournayreLabsPhpstanRules.symfonyAutowireEnvAllowedClasses%
+    -
+        class: TournayreLabs\PHPStanRules\Rules\ControllerEntityManagerRule
+        arguments:
+            controllerClasses: %tournayreLabsPhpstanRules.controllerEntityManagerControllerClasses%
 
 conditionalTags:
     TournayreLabs\PHPStanRules\Rules\InterfaceNameSuffixRule:
@@ -83,3 +97,5 @@ conditionalTags:
         phpstan.rules.rule: %tournayreLabsPhpstanRules.doctrineRepositoryNoInheritance%
     TournayreLabs\PHPStanRules\Rules\SymfonyAutowireEnvRule:
         phpstan.rules.rule: %tournayreLabsPhpstanRules.symfonyAutowireEnv%
+    TournayreLabs\PHPStanRules\Rules\ControllerEntityManagerRule:
+        phpstan.rules.rule: %tournayreLabsPhpstanRules.controllerEntityManager%

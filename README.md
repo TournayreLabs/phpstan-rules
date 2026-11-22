@@ -33,6 +33,8 @@ parameters:
         doctrineRepositoryNoInheritance: false
         symfonyAutowireEnv: true
         symfonyAutowireEnvAllowedClasses: ['App\Config\*']
+        controllerEntityManager: true
+        controllerEntityManagerControllerClasses: ['*\Controller\*', '*Controller']
 ```
 
 ## Rules
@@ -45,12 +47,17 @@ parameters:
 | `doctrinePersistenceCall` | `tournayreLabs.doctrinePersistenceCall` | Native Doctrine persistence methods only in repositories / allowed services |
 | `doctrineRepositoryNoInheritance` | `tournayreLabs.doctrineRepositoryNoInheritance` | Repositories must not extend `EntityRepository` |
 | `symfonyAutowireEnv` | `tournayreLabs.symfonyAutowireEnv` | No `#[Autowire(env: ...)]`: use configuration objects |
+| `controllerEntityManager` | `tournayreLabs.controllerEntityManager` | Controllers must not depend on `Doctrine\ORM\EntityManagerInterface` |
 
 ### Symfony rules
 
 - `symfonyAutowireEnv` (`tournayreLabs.symfonyAutowireEnv`): a method/constructor parameter must not use `#[Autowire(env: '...')]` (nor `#[Autowire('%env(...)%')]` / `value: '%env(...)%'`) — controllers, services, actions. Inject a configuration object instead.
 - `symfonyAutowireEnvAllowedClasses`: class name patterns (`*` wildcard) of the configuration objects allowed to read env variables (e.g. `App\Config\*`). Without it, no class is exempt.
 - Not covered: `#[Autowire(expression: "env('X')")]`, `#[Autowire(param: ...)]` pointing to a parameter built from an env variable.
+
+- `controllerEntityManager` (`tournayreLabs.controllerEntityManager`): a controller must not use `Doctrine\ORM\EntityManagerInterface` (or a subtype such as `EntityManager`) as a constructor / method parameter type (promoted properties and action arguments included) or a property type. Delegate to a service or a repository.
+- `controllerEntityManagerControllerClasses`: class name patterns (`*` wildcard) identifying controllers. Default `['*\Controller\*', '*Controller']`. A class extending `Symfony\Bundle\FrameworkBundle\Controller\AbstractController` or carrying `#[Symfony\Component\HttpKernel\Attribute\AsController]` is a controller too, whatever its name.
+- Not covered: `$this->container->get(EntityManagerInterface::class)`, types declared only in PHPDoc.
 
 ### Doctrine rules
 
